@@ -1,0 +1,164 @@
+﻿@{
+    ViewData["Title"] = "Edit Employee";
+    var empId = Context.Request.RouteValues["id"];
+}
+
+<h2>Edit Employee</h2>
+<hr />
+
+<input type="hidden" id="EmployeeId" value="@empId" />
+
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label>Name</label>
+        <input type="text" id="Name" class="form-control" />
+        <span class="text-danger" id="NameError"></span>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label>Age</label>
+        <input type="number" id="Age" class="form-control" />
+        <span class="text-danger" id="AgeError"></span>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label>City</label>
+        <input type="text" id="City" class="form-control" />
+        <span class="text-danger" id="CityError"></span>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label>State</label>
+        <input type="text" id="State" class="form-control" />
+        <span class="text-danger" id="StateError"></span>
+    </div>
+
+
+</div>
+
+<div class="mt-3">
+    <button onclick="updateEmployee()" class="btn btn-primary">Update</button>
+    <a href="/Home/Index" class="btn btn-secondary">Back</a>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    $(document).ready(function () {
+        loadEmployee();
+    });
+
+    function loadEmployee() {
+        var id = $("#EmployeeId").val();
+        $.ajax({
+            url: "/Home/GetById",
+            type: "GET",
+            data: { id: id },
+            success: function (data) {
+                if (data) {
+                    $("#Name").val(data.name);
+                    $("#Age").val(data.age);
+                    $("#City").val(data.city);
+                    $("#State").val(data.state);
+
+                } else {
+                    alert("Employee not found.");
+                }
+            },
+            error: function () {
+                alert("Error loading employee details.");
+            }
+        });
+    }
+
+    function validateForm() {
+        let isValid = true;
+
+
+        $("#NameError, #AgeError, #CityError, #StateError ").text("");
+
+
+        if (!$("#Name").val().trim()) {
+            $("#NameError").text("Name is required.");
+            isValid = false;
+        }
+
+
+        const age = parseInt($("#Age").val());
+        if (!$("#Age").val()) {
+            $("#AgeError").text("Age is required.");
+            isValid = false;
+        } else if (isNaN(age) || age <= 0) {
+            $("#AgeError").text("Age must be a positive number.");
+            isValid = false;
+        }
+
+        if (!$("#City").val().trim()) {
+            $("#CityError").text("City is required.");
+            isValid = false;
+        }
+
+
+        if (!$("#State").val().trim()) {
+            $("#StateError").text("State is required.");
+            isValid = false;
+        }
+
+
+        return isValid;
+    }
+
+        function updateEmployee() {
+        if (!validateForm()) return;
+
+        var emp = {
+            EmployeeId: $("#EmployeeId").val(),
+            Name: $("#Name").val(),
+            Age: $("#Age").val(),
+            City: $("#City").val(),
+            State: $("#State").val(),
+            ActionMode: "Update"
+        };
+
+        $.ajax({
+            url: "/Home/Edit",
+            type: "POST",
+            data: emp,
+            success: function (res) {
+
+                if (res === "NameExists") {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Duplicate Name',
+                        text: 'Name already exists.'
+                    });
+                }
+                else if (res === "1") {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Updated',
+                        text: 'Employee updated successfully!'
+                    }).then(() => {
+                        window.location.href = "/Home/Index";
+                    });
+                }
+                else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Failed',
+                        text: 'Update failed.'
+                    });
+                }
+            },
+            error: function () {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error occurred during update.'
+                });
+            }
+        });
+    }
+
+</script>

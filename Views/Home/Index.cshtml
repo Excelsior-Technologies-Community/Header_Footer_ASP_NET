@@ -1,0 +1,116 @@
+﻿@{
+    ViewData["Title"] = "Employee List";
+}
+
+<h2>Employee List</h2>
+<hr />
+
+<div class="mb-3">
+    <a href="/Home/Add" class="btn btn-primary">Add New Employee</a>
+</div>
+
+<table class="table table-bordered table-striped" id="employeeTable">
+    <thead>
+        <tr>
+            <th>Sr No</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>City</th>
+            <th>State</th>
+            <th width="150">Action</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+<script>
+    $(document).ready(function () {
+        loadEmployeeList();
+    });
+
+    function loadEmployeeList() {
+        $.ajax({
+            url: "/Home/GetEmployees",
+            type: "GET",
+            success: function (data) {
+                $("#employeeTable tbody").empty();
+                let sr = 1;
+
+                if (Array.isArray(data)) {
+                    data.forEach(function (item) {
+                        $("#employeeTable tbody").append(`
+                            <tr>
+                                <td>${sr++}</td>
+                                <td>${item.name}</td>
+                                <td>${item.age}</td>
+                                <td>${item.city}</td>
+                                <td>${item.state}</td>
+                                <td>
+                                    <a href="/Home/Edit/${item.employeeId}" class="btn btn-sm btn-warning">Edit</a>
+                                    <button class="btn btn-sm btn-danger" onclick="deleteEmployee(${item.employeeId})">Delete</button>
+                                </td>
+                            </tr>
+                        `);
+                    });
+                } else {
+                    console.error("Returned data is not an array", data);
+                }
+            },
+            error: function () {
+                alert("Error loading employee data.");
+            }
+        });
+    }
+    function deleteEmployee(id) {
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'This employee record will be permanently deleted.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+
+            if (!result.isConfirmed) return;
+
+            $.ajax({
+                url: "/Home/Delete",
+                type: "POST",
+                data: { id: id },
+                success: function (res) {
+
+                    if (res === "1") {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Deleted',
+                            text: 'Record deleted successfully!'
+                        });
+
+                        loadEmployeeList();
+                    }
+                    else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Failed',
+                            text: 'Error deleting record.'
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'An error occurred during deletion.'
+                    });
+                }
+            });
+        });
+    }
+
+</script>

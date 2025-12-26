@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\Header_Footer_ASP_NET.props" />
+</Project>

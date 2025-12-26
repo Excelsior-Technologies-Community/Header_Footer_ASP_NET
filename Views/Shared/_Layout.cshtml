@@ -1,0 +1,122 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Header_Footer_ASP_NET</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+
+<body class="d-flex flex-column min-vh-100 bg-light">
+
+    
+    <header class="bg-white border-bottom shadow-sm">
+        <div class="container py-3 d-flex align-items-center gap-4">
+
+            <!-- Logo -->
+            <div>
+                <h4 class="mb-0 fw-bold">Header</h4>
+                <small class="text-muted">Footer</small>
+            </div>
+
+            <!-- Search -->
+            <div class="flex-grow-1">
+                <div class="input-group">
+                    <span class="input-group-text bg-white">🔍</span>
+                    <input type="text"
+                           class="form-control"
+                           placeholder="Search for Sofas, Chairs, Tables, About Us..." />
+                </div>
+            </div>
+
+            <!-- Icons -->
+            <div class="d-flex align-items-center gap-3 fs-5">
+                ❤️
+                👤
+                🛒
+            </div>
+        </div>
+    </header>
+
+    
+    <main class="flex-fill">
+        <div class="container py-4">
+            @RenderBody()
+        </div>
+    </main>
+
+    
+    <footer class="footer-bg text-white mt-auto">
+        <div class="container py-5">
+            <div class="row gy-4">
+
+                <!-- Help -->
+                <div class="col-md-3">
+                    <h5>Help</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">Blogs</a></li>
+                    </ul>
+                </div>
+
+                
+                <div class="col-md-3">
+                    <h5>Category</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Beds</a></li>
+                        <li><a href="#">Wardrobe</a></li>
+                        <li><a href="#">Hindola</a></li>
+                        <li><a href="#">Sofas</a></li>
+                        <li><a href="#">Kitchen</a></li>
+                        <li><a href="#">Center Tables</a></li>
+                    </ul>
+                </div>
+
+              
+                <div class="col-md-3">
+                    <h5>Services</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Shipping Options</a></li>
+                        <li><a href="#">Terms & Conditions</a></li>
+                        <li><a href="#">Purchase & Returns</a></li>
+                        <li><a href="#">Track My Order</a></li>
+                    </ul>
+                </div>
+
+                
+                <div class="col-md-3">
+                    <h5>Contact</h5>
+                    <p class="mb-1">📞 9924963992</p>
+                    <p class="mb-1">✉️ np769593@gmail.com</p>
+                    <p class="mb-0">
+                        📍 Ishtdev Furniture<br />
+                        Shivranjani Cross Road,<br />
+                        Ahmedabad, Gujarat – 380015
+                    </p>
+
+                    <div class="mt-3">
+                        <strong>Follow us on</strong><br />
+                        X | Facebook | Instagram | Pinterest | YouTube
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="text-center py-3 border-top border-light">
+            © 2025 Ishtdev Furniture. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

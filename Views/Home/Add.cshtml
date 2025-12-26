@@ -1,0 +1,136 @@
+﻿@{
+    ViewData["Title"] = "Add Employee";
+}
+
+<h2>Create Employee</h2>
+<hr />
+
+<div class="row">
+
+    <div class="col-md-6 mb-3">
+        <label>Name</label>
+        <input type="text" id="Name" class="form-control" />
+        <span class="text-danger" id="NameError"></span>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label>Age</label>
+        <input type="number" id="Age" class="form-control" />
+        <span class="text-danger" id="AgeError"></span>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label>City</label>
+        <input type="text" id="City" class="form-control" />
+        <span class="text-danger" id="CityError"></span>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label>State</label>
+        <input type="text" id="State" class="form-control" />
+        <span class="text-danger" id="StateError"></span>
+    </div>
+
+
+
+</div>
+
+<div class="mt-3">
+    <button onclick="saveEmployee()" class="btn btn-primary">Save</button>
+    <a href="/Home/Index" class="btn btn-secondary">Back</a>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+<script>
+    function validateForm() {
+        let isValid = true;
+
+
+        $("#NameError, #AgeError, #CityError, #StateError").text("");
+
+
+        if (!$("#Name").val().trim()) {
+            $("#NameError").text("Name is required.");
+            isValid = false;
+        }
+
+
+        const age = parseInt($("#Age").val());
+        if (!$("#Age").val()) {
+            $("#AgeError").text("Age is required.");
+            isValid = false;
+        } else if (isNaN(age) || age <= 0) {
+            $("#AgeError").text("Age must be a positive number.");
+            isValid = false;
+        }
+
+          if (!$("#City").val().trim()) {
+            $("#CityError").text("City is required.");
+            isValid = false;
+        }
+
+
+        if (!$("#State").val().trim()) {
+            $("#StateError").text("State is required.");
+            isValid = false;
+        }
+
+
+        return isValid;
+    }
+    function saveEmployee() {
+        if (!validateForm()) return;
+
+        var employee = {
+            EmployeeId: 0,
+            Name: $("#Name").val(),
+            Age: $("#Age").val(),
+            City: $("#City").val(),
+            State: $("#State").val(),
+            ActionMode: "Insert"
+        };
+
+        $.ajax({
+            url: "/Home/Add",
+            type: "POST",
+            data: employee,
+            success: function (res) {
+
+                if (res === "NameExists") {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Duplicate Name',
+                        text: 'Name already exists.'
+                    });
+                }
+                else if (res === "1") {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Saved',
+                        text: 'Employee saved successfully.'
+                    }).then(() => {
+                        window.location.href = "/Home/Index";
+                    });
+                }
+                else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Failed',
+                        text: 'Failed to save employee.'
+                    });
+                }
+            },
+            error: function () {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An unexpected error occurred.'
+                });
+            }
+        });
+    }
+
+</script>
